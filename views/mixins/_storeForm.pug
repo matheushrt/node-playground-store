@@ -1,13 +1,24 @@
 mixin storeForm(store = {})
-  form(action="/add" method="POST" class="card")
+  form(action=`${store._id ? `/stores/${store._id}/edit` : '/add'}` method="POST" class="card" enctype="multipart/form-data")
     label(for="name") Name
-    input(id="name" type="text" name="name")
+    input(id="name" type="text" name="name" value=`${store.name || ''}`)
     label(for="description") Description
-    textarea(id="description" name="description")
+    textarea(id="description" name="description")= store.description
+    label(for="photo")
+    input(id="photo" type="file" name="photo" accept="image/gif, image/jpeg, image/png")
+    if store.photo
+      img(src=`/uploads/${store.photo}` alt=store.name width=200)
+    label(for="address") Address
+    input(id="address" type="text" name="location[address]" value=(store.location && store.location.address))
+    label(for="lng") Longitude
+    input(id="lng" type="text" name="location[coordinates][0]" value=(store.location && store.location.coordinates[0]))
+    label(for="lat") Latitude
+    input(id="lat" type="text" name="location[coordinates][1]" value=(store.location && store.location.coordinates[1]))
     - const choices = ['Wifi', 'Open Late', 'Family Friendly', 'Vegetarian', 'Licensed']
+    - const tags = store.tags || []
     ul.tags
       each choice in choices
         .tag.tag__choice
-          input(id=choice type="checkbox" value=choice name="tags")
+          input(id=choice type="checkbox" value=choice name="tags" checked=(tags.includes(choice)))
           label(for=choice) #{choice}
     input(type="submit" value="Save" class="button")

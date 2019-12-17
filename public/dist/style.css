@@ -557,6 +557,7 @@ label {
 .flash {
   background: white;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  margin-top: 2rem;
   margin-bottom: 2rem;
   padding: 2rem;
   position: relative;
@@ -564,7 +565,7 @@ label {
   border-radius: 3px;
   display: -ms-flexbox;
   display: flex;
-  animation: slideIn forwards .1s ease-in-out 2;
+  animation: slideIn forwards 0.1s ease-in-out 2;
   animation-timing-function: cubic-bezier(0.01, 1.68, 0.58, 1); }
   .flash + .flash {
     animation-delay: 0.55s; }
@@ -795,6 +796,7 @@ label {
   list-style: none;
   display: -ms-flexbox;
   display: flex;
+  margin-top: 2rem;
   margin-bottom: 2rem;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap; }

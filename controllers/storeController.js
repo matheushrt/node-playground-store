@@ -77,3 +77,12 @@ exports.resize = async (req, res, next) => {
   await photo.write(`./public/uploads/${req.body.photo}`);
   next();
 };
+
+exports.getBySlug = async (req, res, next) => {
+  const store = await Store.findOne({ slug: req.params.slug });
+  if (!store) {
+    next();
+    return;
+  }
+  res.render('store', { title: store.name, store });
+};

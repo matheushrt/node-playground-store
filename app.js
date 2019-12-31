@@ -3,10 +3,11 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const path = require('path');
+const util = require('util');
+const promisify = util.promisify;
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const promisify = require('es6-promisify');
 const flash = require('connect-flash');
 const expressValidator = require('express-validator');
 const routes = require('./routes/index');
@@ -64,7 +65,7 @@ app.use((req, res, next) => {
 
 // promisify some callback based APIs
 app.use((req, res, next) => {
-  req.login = promisify(req.login, req);
+  req.login = promisify(req.login);
   next();
 });
 

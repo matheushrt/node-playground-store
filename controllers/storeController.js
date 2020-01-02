@@ -33,7 +33,7 @@ exports.createStore = async (req, res) => {
     'success',
     `Successfully Created ${store.name}. Care to leave a review?`
   );
-  res.redirect(`/stores/${store.slug}`);
+  res.redirect(`/store/${store.slug}`);
 };
 
 exports.getStores = async (req, res) => {
@@ -65,7 +65,7 @@ exports.updateStore = async (req, res) => {
   }).exec();
   req.flash(
     'success',
-    `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store</a>`
+    `Successfully updated <strong>${store.name}</strong>. <a href="/store/${store.slug}">View Store</a>`
   );
   res.redirect(`/stores/${store._id}/edit`);
 };
@@ -105,4 +105,24 @@ exports.getStoreByTag = async (req, res) => {
   [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
 
   res.render('tags', { tags, title: 'Tags', tag, stores });
+};
+
+exports.searchStores = async (req, res) => {
+  const stores = await Store.find(
+    {
+      $text: {
+        $search: req.query.q
+      }
+    },
+    // shows a new field in the document "score"
+    {
+      score: { $meta: 'textScore' }
+    }
+  )
+    // sort by best text match score
+    .sort({
+      score: { $meta: 'textScore' }
+    })
+    .limit(5);
+  res.json(stores);
 };

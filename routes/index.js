@@ -21,7 +21,7 @@ router.post(
   catchErrors(storeController.updateStore)
 );
 router.get('/stores/:id/edit', catchErrors(storeController.editStore));
-router.get('/stores/:slug', catchErrors(storeController.getBySlug));
+router.get('/store/:slug', catchErrors(storeController.getBySlug));
 router.get('/tags', catchErrors(storeController.getStoreByTag));
 router.get('/tags/:tag', catchErrors(storeController.getStoreByTag));
 router.get('/login', catchErrors(userController.loginForm));
@@ -43,5 +43,7 @@ router.post(
   authController.confirmedPasswords,
   catchErrors(authController.reset)
 );
+
+router.get('/api/search', catchErrors(storeController.searchStores));
 
 module.exports = router;

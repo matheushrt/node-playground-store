@@ -43,7 +43,9 @@ router.post(
   authController.confirmedPasswords,
   catchErrors(authController.reset)
 );
+router.get('/map', storeController.mapPage);
 
 router.get('/api/search', catchErrors(storeController.searchStores));
+router.get('/api/stores/near', storeController.mapStores);
 
 module.exports = router;

@@ -25,7 +25,13 @@ const userSchema = new Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  favorites: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Store'
+    }
+  ]
 });
 
 userSchema.virtual('gravatar').get(function() {

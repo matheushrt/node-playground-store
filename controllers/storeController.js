@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Store = mongoose.model('Store');
+const User = mongoose.model('User');
 const multer = require('multer');
 const jimp = require('jimp');
 const uuid = require('uuid');
@@ -88,7 +89,7 @@ exports.resize = async (req, res, next) => {
 
 exports.getBySlug = async (req, res, next) => {
   const store = await Store.findOne({ slug: req.params.slug }).populate(
-    'author'
+    'author reviews'
   );
   if (!store) {
     next();
@@ -149,4 +150,25 @@ exports.mapStores = async (req, res) => {
 
 exports.mapPage = (req, res) => {
   res.render('map', { title: 'Map' });
+};
+
+exports.heartStore = async (req, res) => {
+  const { favorites, _id } = req.user;
+  const favoritesToString = favorites.map(fav => fav.toString());
+  const operator = favoritesToString.includes(req.params.id)
+    ? '$pull'
+    : '$addToSet';
+  const user = await User.findByIdAndUpdate(
+    _id,
+    {
+      [operator]: { favorites: req.params.id }
+    },
+    { new: true }
+  );
+  res.json(user);
+};
+
+exports.favoriteStores = async (req, res) => {
+  const user = await User.findById(req.user._id).populate('favorites');
+  res.render('stores', { title: 'Favorite Stores', stores: user.favorites });
 };

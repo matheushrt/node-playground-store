@@ -78,10 +78,35 @@ storeSchema.statics.getTagsList = function() {
   ]);
 };
 
+storeSchema.statics.getTopRatedStores = function() {
+  return this.aggregate([
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: '_id',
+        foreignField: 'store',
+        as: 'reviews_list'
+      }
+    },
+    { $match: { 'reviews_list.1': { $exists: true } } },
+    { $addFields: { rating_score: { $avg: '$reviews_list.rating' } } }
+  ])
+    .sort({ rating_score: 'desc' })
+    .limit(10);
+};
+
 storeSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
   foreignField: 'store'
 });
+
+function autoPopulate(next) {
+  this.populate('reviews');
+  next();
+}
+
+storeSchema.pre('find', autoPopulate);
+storeSchema.pre('findOne', autoPopulate);
 
 module.exports = mongoose.model('Store', storeSchema);

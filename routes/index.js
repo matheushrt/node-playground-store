@@ -8,6 +8,7 @@ const { catchErrors } = require('../handlers/errorHandlers');
 
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
+router.get('/stores/page/:page', catchErrors(storeController.getStores));
 router.get('/add', authController.isLoggedIn, storeController.addStore);
 router.post(
   '/add',
@@ -51,6 +52,7 @@ router.get(
   catchErrors(storeController.favoriteStores)
 );
 router.post('/reviews/:id', catchErrors(reviewController.createReview));
+router.get('/top', catchErrors(storeController.getTopStores));
 
 router.get('/api/search', catchErrors(storeController.searchStores));
 router.get('/api/stores/near', storeController.mapStores);

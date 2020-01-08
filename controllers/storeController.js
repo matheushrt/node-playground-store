@@ -39,12 +39,25 @@ exports.createStore = async (req, res) => {
 
 exports.getStores = async (req, res) => {
   const page = Number(req.params.page) || 1;
-  const limit = 3;
+  const limit = 6;
   const skip = page * limit - limit;
-  const stores = await Store.find()
+  const storesPromise = Store.find()
     .skip(skip)
     .limit(limit);
-  res.render('stores', { title: 'Stores', stores });
+  const storesCountPromise = Store.count();
+  const [stores, count] = await Promise.all([
+    storesPromise,
+    storesCountPromise
+  ]);
+  const pages = Math.ceil(count / limit);
+
+  if (page > pages || page < 1) {
+    req.flash('info', 'This page does not exists.');
+    res.redirect('..');
+    return;
+  }
+
+  res.render('stores', { title: 'Stores', stores, page, pages, count });
 };
 
 const confirmOwner = (store, user) => {

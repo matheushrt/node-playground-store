@@ -2,4 +2,6 @@
 
 Just building some cool node stuff
 
-[Check it out live!](https://node-playground-store.herokuapp.com/)
+<a href="https://node-playground-store.herokuapp.com" target="_blank">
+    Check it out live!
+</a>

@@ -194,5 +194,5 @@ exports.favoriteStores = async (req, res) => {
 exports.getTopStores = async (req, res) => {
   const stores = await Store.getTopRatedStores();
 
-  res.render('topStores', { stores });
+  res.render('topStores', { title: 'Top Stores', stores });
 };

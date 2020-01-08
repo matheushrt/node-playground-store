@@ -38,7 +38,12 @@ exports.createStore = async (req, res) => {
 };
 
 exports.getStores = async (req, res) => {
-  const stores = await Store.find();
+  const page = Number(req.params.page) || 1;
+  const limit = 3;
+  const skip = page * limit - limit;
+  const stores = await Store.find()
+    .skip(skip)
+    .limit(limit);
   res.render('stores', { title: 'Stores', stores });
 };
 
@@ -171,4 +176,10 @@ exports.heartStore = async (req, res) => {
 exports.favoriteStores = async (req, res) => {
   const user = await User.findById(req.user._id).populate('favorites');
   res.render('stores', { title: 'Favorite Stores', stores: user.favorites });
+};
+
+exports.getTopStores = async (req, res) => {
+  const stores = await Store.getTopRatedStores();
+
+  res.render('topStores', { stores });
 };
